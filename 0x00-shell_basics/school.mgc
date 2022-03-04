@@ -1,2 +1,4 @@
 #!/bin/bash
-h_school.mgc
+-C -m school.mgc
+#!/bin/bash
+0string SCHOOL school data !:mime school
