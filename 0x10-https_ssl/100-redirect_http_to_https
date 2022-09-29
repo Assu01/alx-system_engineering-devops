@@ -1,0 +1,33 @@
+global
+    log 127.0.0.1 local0 notice
+    maxconn 2000
+    user haproxy
+    group haproxy
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    retries 3
+    option redispatch
+    timeout connect  5000
+    timeout client  10000
+    timeout server  10000
+listen hbnb
+    bind 0.0.0.0:80
+    mode http
+    stats enable
+    stats uri /haproxy?stats
+    balance roundrobin
+    option httpclose
+    option forwardfor
+    server 24847-web-01 3.238.180.65 check
+    server 24847-web-02 3.235.62.78 check
+frontend http-in
+        bind *:80
+        bind *:443 ssl crt /etc/letsencrypt/live/lb-01.jbyenkyaaaron.tech/haproxy.pem
+backend webservers
+        balance roundrobin
+        server 24847-web-01 3.238.180.65 check
+        server 24847-web-02 3.235.62.78 check
+        option httpchk
